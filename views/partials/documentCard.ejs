@@ -1,0 +1,8 @@
+<div class="card">
+  <img width="286px" height="180px" class="card-img-top" src=<%= `/search/img/${doc.documentName}` %> >
+  <div class="card-body">
+    <h5 class="card-title"><%= doc.id %></h5>
+    <p class="card-text"><%= doc.description %></p>
+    <a class="btn btn-primary" href=<%= `/search/download/${doc.documentName}` %> >Download</a>
+  </div>
+</div>
