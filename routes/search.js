@@ -17,17 +17,52 @@ router.get('/download/:filename', (req, res) => {
 });
 
 router.get('/', (req, res, next) => {
-  Document.findDocuments({}).then((docs) => {
+  Document.findDocuments({}).limit(100).then((docs) => {
     const out = {
-      res: [],
+      res: docs,
     };
-
-    docs.forEach((doc) => {
-      out.res.push(doc);
-    });
 
     res.render('search', { out, username: req.session.username });
   }).catch(error => next(error));
+});
+
+router.post('/', (req, res, next) => {
+  const desc = req.body.descriptionSearch;
+  const { id } = req.body;
+
+  let query;
+
+  if (id && desc) {
+    query = {
+      $and: [
+        { id },
+        {
+          description: {
+            $regex: RegExp(desc, 'i'),
+          },
+        },
+      ],
+    };
+  } else if (id) {
+    query = {
+      id,
+    };
+  } else if (desc) {
+    query = {
+      description: {
+        $regex: RegExp(desc, 'i'),
+      },
+    };
+  }
+
+  Document.findDocuments(query)
+    .then((docs) => {
+      const out = {
+        res: docs,
+      };
+
+      res.render('search', { out, username: req.session.username });
+    }).catch(error => next(error));
 });
 
 module.exports = router;
