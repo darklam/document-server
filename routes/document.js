@@ -14,7 +14,18 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+const fileFilter = (req, file, cb) => {
+  if (
+    path.extname(file.originalname) !== '.png' &&
+    path.extname(file.originalname) !== '.jpg'
+  ) {
+    return cb(new Error('Only image uploads are allowed ;)'));
+  }
+
+  cb(null, true);
+};
+
+const upload = multer({ storage, fileFilter });
 
 router.get('/', (req, res) => {
   res.render('document', { username: req.session.username });
