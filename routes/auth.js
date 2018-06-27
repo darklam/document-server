@@ -4,9 +4,7 @@ const bcrypt = require('bcrypt');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.render('login');
-});
+router.get('/', (req, res) => res.render('login'));
 
 router.post('/login', async (req, res, next) => {
   const { username, password } = req.body;
@@ -17,22 +15,20 @@ router.post('/login', async (req, res, next) => {
     if (isSame) {
       req.session.username = username;
       req.session.role = user.role;
-      res.redirect('/home');
-    } else {
-      res.redirect('/auth');
+      return res.redirect('/home');
     }
+    return res.redirect('/auth');
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
 router.get('/logout', (req, res, next) => {
   if (req.session && req.session.username) {
     req.session.destroy();
-    next();
-  } else {
-    next();
+    return next();
   }
+  return next();
 });
 
 module.exports = router;

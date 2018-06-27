@@ -8,12 +8,9 @@ const checkAuth = require('./middleware/checkAuth');
 require('dotenv').config();
 const mongoose = require('mongoose');
 
-const options = {
-  user: process.env.DB_USERNAME,
-  pass: process.env.DB_PASS,
-};
+const uri = `mongodb+srv://admin:${process.env.DB_PASS}@grafeio-vk16q.mongodb.net/grafeio?retryWrites=true`;
 
-mongoose.connect(`mongodb://localhost/${process.env.DB_NAME}`, options)
+mongoose.connect(uri)
   .then(() => console.log('Connected to database'))
   .catch(error => console.log(error));
 
